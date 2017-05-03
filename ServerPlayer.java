@@ -29,7 +29,7 @@ public class ServerPlayer extends Thread {
 		System.out.println("Server Started");
 		while(true)
 		{
-			System.out.println(game.whoseTurn);
+			
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			try {

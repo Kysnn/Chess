@@ -31,7 +31,7 @@ public class ClientPlayer extends Thread {
 		System.out.println("Client started");
 		String message = "ajdaranik";
 		while (true) {
-			System.out.println(game.whoseTurn);
+			
 			sendData(game.mvmsg.getBytes(), 10002);
 			
 			byte[] data = new byte[1024];

@@ -202,7 +202,14 @@ public class Chessboard extends JFrame {
 			System.out.println(square.x + " " + square.y);
 			game.mvmsg = "mv" + square.x + "" + square.y;
 			if(square.onThis != null)
-			square.onThis.showWhereCanItGo();
+			{
+				if(game.whoseTurn.equals(square.onThis.side))
+					square.onThis.showWhereCanItGo();
+				else
+					return;
+			
+			}
+			
 			
 				
 			if(lastClickedSquares.size() != 1)
