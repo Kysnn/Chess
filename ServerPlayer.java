@@ -1,3 +1,5 @@
+package sinanchess12apr;
+
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -7,7 +9,7 @@ import java.net.SocketException;
 
 public class ServerPlayer extends Thread {
 	
-        private String lastMessage = "";
+    private String lastMessage = "";
 	private Game game;
 	private DatagramSocket serverSocket;
 	
@@ -22,10 +24,12 @@ public class ServerPlayer extends Thread {
 	}
 	
 	public void run()
-	{       String message  = "ajdaranik";
+	{   
+		String message  = "ajdaranik";
 		System.out.println("Server Started");
 		while(true)
 		{
+			System.out.println(game.whoseTurn);
 			byte[] data = new byte[1024];
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			try {
@@ -57,6 +61,7 @@ public class ServerPlayer extends Thread {
                             
 			
 			System.out.println(("CLIENT > " + packet.getAddress().toString() + message).trim());
+			sendData(game.mvmsg.getBytes(),packet.getPort(),packet.getAddress());
 		}
               
 	}
