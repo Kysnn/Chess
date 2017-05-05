@@ -10,11 +10,11 @@ public class Game {
 	public Game(String serverIP) //client side constructor
 	{
 		client = new ClientPlayer(this,serverIP);
-		whoIsThis = "client";
+		whoIsThis = "black";
 	}
 	public Game(){
 		server = new ServerPlayer(this,10002);
-		whoIsThis = "server";
+		whoIsThis = "white";
 	};//standart constructor for server side.
 	
 	public void enableChessboard()
@@ -34,9 +34,15 @@ public class Game {
 	{
 		cb = new Chessboard(this);
 		if(client != null)
+			{
 			client.start();
+			cb.setTitle("Client");
+			}
 		else
+		{
 			server.start();
+			cb.setTitle("Server");
+		}
 	}
 	public void changeTurn()
 	{

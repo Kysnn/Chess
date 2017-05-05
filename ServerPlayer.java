@@ -21,12 +21,21 @@ public class ServerPlayer extends Thread {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
+		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+		    public void uncaughtException(Thread t, Throwable e) {
+		      System.err.println(t + " throws exception: " + e);
+		    }
+		 });
 	}
 	
 	public void run()
 	{   
 		String message  = "ajdaranik";
 		System.out.println("Server Started");
+		
+		
+		
 		while(true)
 		{
 			
@@ -34,8 +43,8 @@ public class ServerPlayer extends Thread {
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			try {
 				serverSocket.receive(packet);
-			} catch (IOException e) {
-				System.err.println("Error while receiving packet");
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
                         
 			 message = new String(packet.getData());
@@ -62,7 +71,9 @@ public class ServerPlayer extends Thread {
 			
 			System.out.println(("CLIENT > " + packet.getAddress().toString() + message).trim());
 			sendData(game.mvmsg.getBytes(),packet.getPort(),packet.getAddress());
+		
 		}
+		
               
 	}
 	public void sendData(byte[] data,int portNumber,InetAddress ip)

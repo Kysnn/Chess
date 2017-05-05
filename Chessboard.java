@@ -203,10 +203,9 @@ public class Chessboard extends JFrame {
 			game.mvmsg = "mv" + square.x + "" + square.y;
 			if(square.onThis != null)
 			{
-				if(game.whoseTurn.equals(square.onThis.side))
+				
 					square.onThis.showWhereCanItGo();
-				else
-					return;
+				
 			
 			}
 			

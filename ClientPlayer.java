@@ -15,6 +15,7 @@ public class ClientPlayer extends Thread {
 	private DatagramSocket clientSocket;
     
 	public ClientPlayer(Game game, String ip) {
+		
 		try {
 			this.game = game;
 			this.ip = InetAddress.getByName(ip);
@@ -22,6 +23,12 @@ public class ClientPlayer extends Thread {
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
+		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+		    public void uncaughtException(Thread t, Throwable e) {
+		      System.err.println(t + " throws exception: " + e);
+		    }
+		 });
 	}
 
 	public void run() {
@@ -60,10 +67,11 @@ public class ClientPlayer extends Thread {
 				
 				lastMessage = message;
 			}
-		
+			
 
 			System.out.println(("SERVER > " + packet.getAddress().toString() + message).trim());
-
+		
+	
 		}
 	}
 
