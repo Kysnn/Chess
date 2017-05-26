@@ -1,3 +1,4 @@
+package sinanchess12apr;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -27,6 +28,7 @@ public class Chessboard extends JFrame {
 	boolean normalPaintTraverse = true;
 	int[][] tableAsNumber; //representation of the table with numbers
 	TableSquare[][] tableAsSquare ; //representation of the table with Squares
+	Piece checker = null;
 	
 	
 	public Chessboard(Game game) {
@@ -197,15 +199,26 @@ public class Chessboard extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
+			
+			
 			lastClickedSquares.add(square);		
 			System.out.println(square.x + " " + square.y);
 			game.mvmsg = "mv" + square.x + "" + square.y;
+			
 			if(square.onThis != null)
 			{
-				        square.onThis.clearTheList();
+				square.onThis.calculateWhereCanItGo();
+				if(game.getClient() != null && square.onThis.type.equals(game.getClient().side))
+					{
+						square.onThis.clearTheList();
+						square.onThis.showWhereCanItGo();
+					}
+				 if(square.onThis.type.equals(game.getClient().side))
+				{
+					square.onThis.clearTheList();
 					square.onThis.showWhereCanItGo();
-				
-			
+				}
+							
 			}
 			
 			
@@ -220,15 +233,43 @@ public class Chessboard extends JFrame {
 						
 				else if(square.onThis == null && actioner != null && actioner.getAvailablePosList().contains(square) )
 				{
-					System.out.println("gitmesi gerek!");
-					clearFromBlues();
-					square.onThis = returnNewVictor(actioner, square.x, square.y);
-					actioner = null;
-					lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
-					
-					lastClickedSquares.clear();
-					drawPieces();
-                                        clearFromBlues();
+					if(checker == null)
+					{
+						clearFromBlues();
+						square.onThis = returnNewVictor(actioner, square.x, square.y);
+						actioner = null;
+						lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
+						lastClickedSquares.clear();
+						clearFromBlues();
+						drawPieces();
+						square.onThis.calculateWhereCanItGo();
+						isThereCheck(square.onThis);
+						
+					}
+					else
+					{
+						clearFromBlues();
+						square.onThis = returnNewVictor(actioner, square.x, square.y);
+						checker.calculateWhereCanItGo();
+						if(isThereCheck(checker))
+						{
+							square.onThis = null;
+						}
+						else
+						{
+							actioner = null;
+							lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
+							lastClickedSquares.clear();
+							clearFromBlues();
+							drawPieces();
+							square.onThis.calculateWhereCanItGo();
+							isThereCheck(square.onThis);
+							checker = null;
+						}
+						
+					}
+
+					//Buraya þah gelcek
 				}
 				else if(square.onThis != null  && lastClickedSquares.get(lastClickedSquares.size()-2).onThis != null && !lastClickedSquares.get(lastClickedSquares.size()-2).onThis.getAvailablePosList().contains(square))
 					{
@@ -241,15 +282,13 @@ public class Chessboard extends JFrame {
 				{
 				clearFromBlues();
 				System.out.println(lastClickedSquares.get(lastClickedSquares.size()-2).onThis.type + " is gonna eat that motherfucker!");
-				
-				
 				square.onThis = null;
 				square.onThis = returnNewVictor(lastClickedSquares.get(lastClickedSquares.size()-2).onThis, square.x, square.y);
-				
 				lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
-				
 				lastClickedSquares.clear();
 				drawPieces();
+				square.onThis.calculateWhereCanItGo();
+				isThereCheck(square.onThis);
 				}
 
 				else if(square.onThis != null  && lastClickedSquares.get(lastClickedSquares.size()-2).onThis != null && lastClickedSquares.get(lastClickedSquares.size()-2).onThis.getAvailablePosList().contains(square))
@@ -375,6 +414,25 @@ public class Chessboard extends JFrame {
 		for (int i = 0; i < 8; i++)
 			for (int k = 0; k < 8; k++)
 				tableAsSquare[i][k].setEnabled(true);
+	}
+	
+	public boolean isThereCheck(Piece p)
+	{
+		boolean answer = false;
+		for(int i = 0 ; i < p.availablePos.size() ;  ++i)
+		{
+			if(p.availablePos.get(i).onThis != null)
+				System.out.println(p.availablePos.get(i).onThis.type);
+			if(p.availablePos.get(i).onThis != null && p.availablePos.get(i).onThis.type.equals("king"))
+				{
+				JOptionPane.showConfirmDialog(null,"Chekku!!");
+				checker = p;
+				answer = true;
+				break;
+				}
+			
+		}
+		return answer;
 	}
 	
 

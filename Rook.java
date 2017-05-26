@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -13,7 +13,7 @@ public class Rook extends Piece {
 
     @Override
     void calculateWhereCanItGo() {
-
+    	availablePos.clear();
         //limit to up
         for (int i = x - 1; i >= 0; i--) {
             if (cB.tableAsSquare[i][y].onThis != null) {

@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -14,7 +14,7 @@ public class King extends Piece {
     @Override
     void calculateWhereCanItGo() {
         // TODO Auto-generated method stub
-
+    	availablePos.clear();
         if ((x - 1 <= 7 && x - 1 >= 0)) //StepFront
         {
             if (cB.tableAsSquare[x - 1][y].onThis == null) {

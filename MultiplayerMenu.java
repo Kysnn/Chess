@@ -1,3 +1,4 @@
+package sinanchess12apr;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -30,8 +30,9 @@ public abstract class Piece {
 	{
 		return availablePos;
 	}
-        public void clearTheList(){        
-            availablePos.clear();
-        }
+	public void clearTheList()
+	{
+		availablePos.clear();
+	}
 	
 }

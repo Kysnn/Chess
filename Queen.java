@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -13,6 +13,7 @@ public class Queen extends Piece{
 
 	@Override
 	void calculateWhereCanItGo() {
+		availablePos.clear();
 		int cntr = 1;
         for (int i = y + 1; i <= 7; i++) { //CrossBackRight
         	

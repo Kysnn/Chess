@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 import java.awt.Image;
 import java.io.File;
@@ -42,19 +42,19 @@ public class AssetHolder {
 	{
 		try {
 			//reading white pieces
-			whitePieces[0] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\BeyazSah.png"));
-			whitePieces[1] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\BeyazVezir.png"));
-			whitePieces[2] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\BeyazFil.png"));
-			whitePieces[3] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\BeyazAt.png"));
-			whitePieces[4] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\BeyazKale.png"));
-			whitePieces[5] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\BeyazPiyon.png"));
+			whitePieces[0] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\BeyazSah.png"));
+			whitePieces[1] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\BeyazVezir.png"));
+			whitePieces[2] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\BeyazFil.png"));
+			whitePieces[3] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\BeyazAt.png"));
+			whitePieces[4] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\BeyazKale.png"));
+			whitePieces[5] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\BeyazPiyon.png"));
 			//reading black pieces
-			blackPieces[0] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\SiyahSah.png"));
-			blackPieces[1] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\SiyahVezir.png"));
-			blackPieces[2] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\SiyahFil.png"));
-			blackPieces[3] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\SiyahAt.png"));
-			blackPieces[4] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\SiyahKale.png"));
-			blackPieces[5] = ImageIO.read(new File("C:\\Users\\Sinan\\Desktop\\SantracTas\\SiyahPiyon.png"));
+			blackPieces[0] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\SiyahSah.png"));
+			blackPieces[1] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\SiyahVezir.png"));
+			blackPieces[2] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\SiyahFil.png"));
+			blackPieces[3] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\SiyahAt.png"));
+			blackPieces[4] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\SiyahKale.png"));
+			blackPieces[5] = ImageIO.read(new File("C:\\Users\\Doða\\Desktop\\SantracTas\\SiyahPiyon.png"));
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

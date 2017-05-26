@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ public class ServerPlayer extends Thread {
     private String lastMessage = "";
 	private Game game;
 	private DatagramSocket serverSocket;
-	
+	String side = "white";
 	public ServerPlayer(Game game,int socket)
 	{
 		this.game = game;

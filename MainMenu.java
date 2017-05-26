@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -67,9 +67,9 @@ public class MainMenu extends JFrame {
 					System.out.println(b.getText());
 				}
 			 else if(b.getText().equals("start offline"))
-				 {      Game g=new Game();
-					cb = new Chessboard(g);
-					System.out.println(b.getText());
+				 {
+				 	Game g1 = new Game();
+				 	cb = new Chessboard(g1);
 				 }
 			
 			else if(b.getText().equals("exit"))

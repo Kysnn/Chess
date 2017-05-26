@@ -1,3 +1,4 @@
+package sinanchess12apr;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -6,13 +7,15 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import javax.management.RuntimeErrorException;
+
 public class ClientPlayer extends Thread {
 
 	private String lastMessage = "";
 	private Game game;
 	private InetAddress ip;
 	private DatagramSocket clientSocket;
-    
+    String side = "black";
 	public ClientPlayer(Game game, String ip) {
 		
 		try {
@@ -25,7 +28,7 @@ public class ClientPlayer extends Thread {
 		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
 		    public void uncaughtException(Thread t, Throwable e) {
-		      System.err.println(t + " throws exception: " + e);
+		      System.err.println(t + " throws balık exception: " + e);
 		    }
 		 });
 	}
@@ -36,6 +39,9 @@ public class ClientPlayer extends Thread {
 		
 		System.out.println("Client started");
 		String message = "ajdaranik";
+	
+			
+		
 		while (true) {
 			
 			sendData(game.mvmsg.getBytes(), 10002);
@@ -69,9 +75,11 @@ public class ClientPlayer extends Thread {
 			
 
 			System.out.println(("SERVER > " + packet.getAddress().toString() + message).trim());
-		
+			
 	
 		}
+		
+		
 	}
 
 	public void sendData(byte[] data, int portNumber) {

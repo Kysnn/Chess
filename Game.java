@@ -1,4 +1,4 @@
-
+package sinanchess12apr;
 
 public class Game {
 	private ServerPlayer server;
@@ -17,6 +17,18 @@ public class Game {
 		whoIsThis = "white";
 	};//standart constructor for server side.
 	
+	public ServerPlayer getServer() {
+		return server;
+	}
+	public void setServer(ServerPlayer server) {
+		this.server = server;
+	}
+	public ClientPlayer getClient() {
+		return client;
+	}
+	public void setClient(ClientPlayer client) {
+		this.client = client;
+	}
 	public void enableChessboard()
 	{
 		cb.enableBoard();
@@ -32,6 +44,8 @@ public class Game {
 	
 	public void startGame()
 	{
+		try
+		{
 		cb = new Chessboard(this);
 		if(client != null)
 			{
@@ -43,6 +57,11 @@ public class Game {
 			server.start();
 			cb.setTitle("Server");
 		}
+		}
+		catch (Throwable ex) {
+	        System.err.println("Uncaught exception - " + ex.getMessage());
+	        ex.printStackTrace(System.err);
+	    }
 	}
 	public void changeTurn()
 	{

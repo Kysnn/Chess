@@ -1,3 +1,4 @@
+package sinanchess12apr;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -12,7 +13,7 @@ public class Knight extends Piece {
     
     @Override
     void calculateWhereCanItGo() {
-    	
+    	availablePos.clear();
         if ((x - 2 <= 7 && x - 2 >= 0) && (y + 1 <= 7 && y + 1 >= 0)) //FrontRight
         {
             if (cB.tableAsSquare[x - 2][y + 1].onThis == null) {
