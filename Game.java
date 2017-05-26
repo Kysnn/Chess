@@ -1,4 +1,4 @@
-package sinanchess12apr;
+
 
 public class Game {
 	private ServerPlayer server;

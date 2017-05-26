@@ -1,4 +1,3 @@
-package sinanchess12apr;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -203,7 +202,7 @@ public class Chessboard extends JFrame {
 			game.mvmsg = "mv" + square.x + "" + square.y;
 			if(square.onThis != null)
 			{
-				
+				        square.onThis.clearTheList();
 					square.onThis.showWhereCanItGo();
 				
 			
@@ -229,6 +228,7 @@ public class Chessboard extends JFrame {
 					
 					lastClickedSquares.clear();
 					drawPieces();
+                                        clearFromBlues();
 				}
 				else if(square.onThis != null  && lastClickedSquares.get(lastClickedSquares.size()-2).onThis != null && !lastClickedSquares.get(lastClickedSquares.size()-2).onThis.getAvailablePosList().contains(square))
 					{

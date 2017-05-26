@@ -1,4 +1,4 @@
-package sinanchess12apr;
+
 
 
 import java.io.IOException;

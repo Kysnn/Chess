@@ -1,4 +1,3 @@
-package sinanchess12apr;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
