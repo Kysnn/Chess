@@ -18,6 +18,7 @@ import javax.swing.*;
 public class Chessboard extends JFrame {
 	Game game;
 	TableSquare square;
+	JTextField infoField;
 	ArrayList<TableSquare> lastClickedSquares = new ArrayList<>();
 	short clickCounter = 0;
 	Image img;
@@ -63,7 +64,12 @@ public class Chessboard extends JFrame {
 		tableAsNumber = new int[8][8];
 		setTitle("Chess");
 		setSize(600, 800 );
-		setResizable(false);
+		setResizable(true);
+		infoField = new JTextField(20);
+		infoField.setSize(200,30);
+		infoField.setBounds(10,700,200,30);
+		infoField.setText("kakdkasdsa");
+		infoField.setEnabled(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		System.out.println(getInsets().top);
 	
@@ -108,6 +114,7 @@ public class Chessboard extends JFrame {
 			}
 		
 		add(p,BorderLayout.CENTER);
+		add(infoField,BorderLayout.SOUTH);
 		pack();
 		setVisible(true);
 	}
@@ -118,7 +125,7 @@ public class Chessboard extends JFrame {
 	public Dimension getPreferredSize()
 	{
 		if(System.getProperty("os.name").contains("Windows"))
-		return new Dimension(608,630);
+		return new Dimension(608,670);
 		else
 		return new Dimension(600,600);
 	}
@@ -205,24 +212,13 @@ public class Chessboard extends JFrame {
 			System.out.println(square.x + " " + square.y);
 			game.mvmsg = "mv" + square.x + "" + square.y;
 			
-			if(square.onThis != null)
-			{
-				square.onThis.calculateWhereCanItGo();
-				if(game.getClient() != null && square.onThis.type.equals(game.getClient().side))
-					{
-						square.onThis.clearTheList();
-						square.onThis.showWhereCanItGo();
-					}
-				 if(square.onThis.type.equals(game.getClient().side))
-				{
-					square.onThis.clearTheList();
-					square.onThis.showWhereCanItGo();
-				}
+			
+				if(square.onThis != null)
+						{
+							square.onThis.showWhereCanItGo();
+					
+						}
 							
-			}
-			
-			
-				
 			if(lastClickedSquares.size() != 1)
 				{
 				Piece actioner = lastClickedSquares.get(lastClickedSquares.size()-2).onThis;
@@ -233,8 +229,7 @@ public class Chessboard extends JFrame {
 						
 				else if(square.onThis == null && actioner != null && actioner.getAvailablePosList().contains(square) )
 				{
-					if(checker == null)
-					{
+						isThereCheck();
 						clearFromBlues();
 						square.onThis = returnNewVictor(actioner, square.x, square.y);
 						actioner = null;
@@ -242,34 +237,8 @@ public class Chessboard extends JFrame {
 						lastClickedSquares.clear();
 						clearFromBlues();
 						drawPieces();
-						square.onThis.calculateWhereCanItGo();
-						isThereCheck(square.onThis);
-						
-					}
-					else
-					{
-						clearFromBlues();
-						square.onThis = returnNewVictor(actioner, square.x, square.y);
-						checker.calculateWhereCanItGo();
-						if(isThereCheck(checker))
-						{
-							square.onThis = null;
-						}
-						else
-						{
-							actioner = null;
-							lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
-							lastClickedSquares.clear();
-							clearFromBlues();
-							drawPieces();
-							square.onThis.calculateWhereCanItGo();
-							isThereCheck(square.onThis);
-							checker = null;
-						}
-						
-					}
-
-					//Buraya þah gelcek
+						isThereCheck();
+												
 				}
 				else if(square.onThis != null  && lastClickedSquares.get(lastClickedSquares.size()-2).onThis != null && !lastClickedSquares.get(lastClickedSquares.size()-2).onThis.getAvailablePosList().contains(square))
 					{
@@ -287,8 +256,7 @@ public class Chessboard extends JFrame {
 				lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
 				lastClickedSquares.clear();
 				drawPieces();
-				square.onThis.calculateWhereCanItGo();
-				isThereCheck(square.onThis);
+				
 				}
 
 				else if(square.onThis != null  && lastClickedSquares.get(lastClickedSquares.size()-2).onThis != null && lastClickedSquares.get(lastClickedSquares.size()-2).onThis.getAvailablePosList().contains(square))
@@ -416,22 +384,67 @@ public class Chessboard extends JFrame {
 				tableAsSquare[i][k].setEnabled(true);
 	}
 	
-	public boolean isThereCheck(Piece p)
+	public boolean isThereCheck()
 	{
 		boolean answer = false;
-		for(int i = 0 ; i < p.availablePos.size() ;  ++i)
+		TableSquare whiteKingThrone = null;
+		TableSquare blackKingThrone = null;
+		
+		infoField.setText("Scan started");
+		
+		for(int i = 0 ; i < 8 ; ++i)
 		{
-			if(p.availablePos.get(i).onThis != null)
-				System.out.println(p.availablePos.get(i).onThis.type);
-			if(p.availablePos.get(i).onThis != null && p.availablePos.get(i).onThis.type.equals("king"))
-				{
-				JOptionPane.showConfirmDialog(null,"Chekku!!");
-				checker = p;
-				answer = true;
-				break;
-				}
-			
+			for(int k = 0 ; k < 8 ; ++k)
+			{
+		         if(tableAsSquare[i][k].onThis != null && tableAsSquare[i][k].onThis.type.equals("king"))
+		         {
+		        	 if(tableAsSquare[i][k].onThis.side.equals("black"))
+		        	 {
+		        		 blackKingThrone = tableAsSquare[i][k];
+		        		 
+		        	 }
+		        	 else if(tableAsSquare[i][k].onThis.side.equals("white"))
+		        	 {
+		        		 whiteKingThrone = tableAsSquare[i][k];
+		        		 
+		        	 }
+		         }
+			}
 		}
+		System.out.println(whiteKingThrone.x + " " + whiteKingThrone.y + " white king dwells here");
+		System.out.println(blackKingThrone.x + " " + blackKingThrone.y + " black king dwells here");
+		
+		for(int i = 0 ; i < 8 ; ++i)
+		{
+			for(int k = 0 ; k < 8 ; ++k)
+			{
+				if(tableAsSquare[i][k].onThis != null)
+				{
+					Piece currentPiece = tableAsSquare[i][k].onThis;
+					System.out.println(currentPiece.side + " " + currentPiece.type);
+					currentPiece.calculateWhereCanItGo();
+										
+					if(currentPiece.side.equals("black") && currentPiece.getAvailablePosList().contains(whiteKingThrone))
+						{
+							infoField.setText(currentPiece.side + " " + currentPiece.type + " is treatening the king!");
+							checker = currentPiece;
+							answer = true;
+							break;
+						}
+					
+					if(currentPiece.side.equals("white") && currentPiece.getAvailablePosList().contains(blackKingThrone))
+					{
+						infoField.setText(currentPiece.side + " " + currentPiece.type + " is treatening the king!");
+						checker = currentPiece;
+						answer = true;
+						break;
+					}
+					
+				}
+
+			}
+		}
+		
 		return answer;
 	}
 	
