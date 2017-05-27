@@ -244,6 +244,10 @@ public class Chessboard extends JFrame {
 								drawPieces();
 								if(isThereCheck())
 								{
+									if(endOfTheGame())
+									{
+										disableBoard();
+									}
 									isThereCheck();
 								}
 							}
@@ -268,6 +272,10 @@ public class Chessboard extends JFrame {
 								drawPieces();
 								if(isThereCheck())
 								{
+									if(endOfTheGame())
+									{
+										disableBoard();
+									}
 									isThereCheck();
 								}
 							}
@@ -295,9 +303,6 @@ public class Chessboard extends JFrame {
 						&& !lastClickedSquares.get(lastClickedSquares.size()-2).onThis.side.equalsIgnoreCase(square.onThis.side))
 				{
 				
-				
-			
-
 				clearFromBlues();
 				if(isThereCheck())
 				{
@@ -312,10 +317,18 @@ public class Chessboard extends JFrame {
 						drawPieces();
 						if(isThereCheck())
 						{
+							if(endOfTheGame())
+							{
+								disableBoard();
+							}
 							isThereCheck();
 						}
 					}
-					else
+					else if(isThereCheck() && tempVictor.type.equals("king") )
+					{
+						disableBoard();
+					}
+					else if(isThereCheck() && !tempVictor.type.equals("king") )
 					{
 						square.onThis = tempVictim;
 						lastClickedSquares.get(lastClickedSquares.size()-2).onThis = tempVictor;
@@ -424,6 +437,7 @@ public class Chessboard extends JFrame {
 		String TYPE = victor.type;
 		String SIDE = victor.side;
 		Piece answer = null;
+		
 		switch(TYPE)
 		{
 		case "bishop":
@@ -453,7 +467,10 @@ public class Chessboard extends JFrame {
 		}
 		case "pawn":
 		{
-		  answer = new Pawn(X,Y,SIDE,this);
+		  if(X == 0 || X == 7)
+			  answer = new Queen(X,Y,SIDE,this);
+		  else
+		      answer = new Pawn(X,Y,SIDE,this);
 		  break;
 		}
 		
@@ -519,7 +536,7 @@ public class Chessboard extends JFrame {
 										
 					if(currentPiece.side.equals("black") && currentPiece.getAvailablePosList().contains(whiteKingThrone))
 						{
-							infoField.setText(currentPiece.side + " " + currentPiece.type + " is treatening the king!");
+							infoField.setText(currentPiece.side + " " + currentPiece.type + " is threatening the king!");
 							checker = currentPiece;
 							answer = true;
 							break;
@@ -527,7 +544,7 @@ public class Chessboard extends JFrame {
 					
 					if(currentPiece.side.equals("white") && currentPiece.getAvailablePosList().contains(blackKingThrone))
 					{
-						infoField.setText(currentPiece.side + " " + currentPiece.type + " is treatening the king!");
+						infoField.setText(currentPiece.side + " " + currentPiece.type + " is threatening the king!");
 						checker = currentPiece;
 						answer = true;
 						break;
@@ -543,102 +560,135 @@ public class Chessboard extends JFrame {
 		}
 		return answer;
 	}
+	public Piece findVictimKing()
+	{
+		String colorOfVictim = "";
+		if(checker.side.equals("white"))
+			colorOfVictim = "black";
+		else if(checker.side.equals("black"))
+			colorOfVictim = "white";
+		Piece victimKing = null;
+		
+		//Find the king which is in trouble.
+		for(int i = 0 ; i < 8 ; ++i)
+		{
+			for(int k = 0 ; k < 8 ; ++k)
+			{
+				if(tableAsSquare[i][k].onThis != null && tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals(colorOfVictim))
+				{
+					victimKing = tableAsSquare[i][k].onThis;
+					break;
+				}
+			}
+		}
+		return victimKing;
+	}
     public boolean endOfTheGame() {
-        boolean result = true;
-        	
-        if(checker != null)
-        {  	 checker.calculateWhereCanItGo();
-        	 if (checker.side.equals("black")) { //For Black
-                 for (int i = 0; i < 8; ++i) { //Sahin Gidebilecegi Yer Var mi?
-                     for (int k = 0; k < 8; ++k) {
-                         if (tableAsSquare[i][k].onThis != null && tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("white")) {
-                             tableAsSquare[i][k].onThis.calculateWhereCanItGo();
-                             if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Sah Checkerý Yiyebilir mi ?
-                                   result = false;
-                             else
-                            	 {
-                            	 for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) {
-                            		 if (checker.availablePos.contains(tableAsSquare[i][k].onThis.availablePos.get(j))) {
-                                     result=true;
-                            		 }
-                            	 }
-                             }
-                         }
+    	
+            	
+    		boolean result = true;
+    		Piece victimKing = null;
+    		
+    		victimKing = findVictimKing();
+    		
+    		Piece copyVictimKing = new King(victimKing.x,victimKing.y,victimKing.side,this);
+    		victimKing.calculateWhereCanItGo();
+    		
+    		if(victimKing.availablePos.contains(tableAsSquare[checker.x][checker.y]))
+    		{
+    			result = false;
+    		}
+    		
+    		else
+    		{//
+    			
+               
+    			for(int i = 0 ; i < victimKing.availablePos.size() ; ++i)
+    			{
+    				Piece dumbKing = new King(victimKing.availablePos.get(i).x,victimKing.availablePos.get(i).y,copyVictimKing.side,this);
+    				tableAsSquare[victimKing.availablePos.get(i).x][victimKing.availablePos.get(i).y].onThis = dumbKing;
+    				tableAsSquare[victimKing.x][victimKing.y].onThis = null;
+    				
+    				if(isThereCheck())
+    				{   
+    					tableAsSquare[dumbKing.x][dumbKing.y].onThis = null;
+    					tableAsSquare[copyVictimKing.x][copyVictimKing.y].onThis = copyVictimKing;
+    				}
+    				else if(!isThereCheck())
+    				{
+    					tableAsSquare[dumbKing.x][dumbKing.y].onThis = null;
+    					tableAsSquare[copyVictimKing.x][copyVictimKing.y].onThis = copyVictimKing;
+    					result = false;
+    					break;
+    				}
+    				
+    				  				
+    			}
+    			if(checker.side.equals("black"))
+    			{
+        		    for (int i = 0; i < 8; ++i) { //Sah Ceken Tasin Onune Gelebilecek Tas Var mi ?
+                        for (int k = 0; k < 8; ++k) {
+                            if (tableAsSquare[i][k].onThis != null && !tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("white")) 
+                            {
+                                tableAsSquare[i][k].onThis.calculateWhereCanItGo();
+                                if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Checkerý Baþka Bir Taþ Yiyebilir mi?
+                               	 result =false;
+                                else
+                             for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) 
+                                    if (j<checker.availablePos.size() && tableAsSquare[i][k].onThis.availablePos.contains(checker.availablePos.get(j))) 
+                                    {
+                                        tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = returnNewVictor(tableAsSquare[i][k].onThis,checker.availablePos.get(j).x,checker.availablePos.get(j).y);
+                                                                           
+                                        if(isThereCheck())
+                                       	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
+                                        else
+                                        {
+                                       	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
+                                       	 result = false;
+                                       	 break;
+                                        }
+                                                                   
+                                    }
+                                }
+                        	}}
+    			}
 
-                     }
-                 }
-             
-                   for (int i = 0; i < 8; ++i) { //Sah Ceken Tasin Onune Gelebilecek Tas Var mi ?
-                     for (int k = 0; k < 8; ++k) {
-                         if (tableAsSquare[i][k].onThis != null && !tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("white")) {
-                             tableAsSquare[i][k].onThis.calculateWhereCanItGo();
-                             if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Checkerý Baþka Bir Taþ Yiyebilir mi?
-                            	 result =false;
-                             else
-                          for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) 
-                                 if (j<checker.availablePos.size() && tableAsSquare[i][k].onThis.availablePos.contains(checker.availablePos.get(j))) {
-                                     tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = returnNewVictor(tableAsSquare[i][k].onThis,checker.availablePos.get(j).x,checker.availablePos.get(j).y);
-                                     
-                                     
-                                     if(isThereCheck())
-                                    	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
-                                     else
-                                     {
-                                    	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
-                                    	 result = false;
-                                    	 break;
-                                     }
-                                    	 
-                                     
-                                     
-                                 }
-                             }
-                         }
-                     }
-                 }
-                                     
-             else if(checker.side.equals("white"))
-             {
-                	for (int i = 0; i < 8; ++i) { //Sahin Gidebilecegi Yer Var mi?
-                     for (int k = 0; k < 8; ++k) {
-                         if (tableAsSquare[i][k].onThis != null && tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("black")) {
-                             tableAsSquare[i][k].onThis.calculateWhereCanItGo();
-                             if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Sah Checkerý Yiyebilir mi ?
-                                   result= false;
-                             else
-                             for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) {
-                                 if (checker.availablePos.contains(tableAsSquare[i][k].onThis.availablePos.get(j))) {
-                                     result=true;
-                                 }
-                             }
-                         }
-
-                     }
-                 }
-             
-                         for (int i = 0; i < 8; ++i) { //Sah Ceken Tasin Onune Gelebilecek Tas Var mi ?
-                     for (int k = 0; k < 8; ++k) {
-                         if (tableAsSquare[i][k].onThis != null && !tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("black")) {
-                             tableAsSquare[i][k].onThis.calculateWhereCanItGo();
-                             if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Checkerý Baþka Bir Taþ Yiyebilir mi?
-                             result =false;
-                             else
-                          for (int j = 0; j < checker.availablePos.size(); j++) 
-                                 if (tableAsSquare[i][k].onThis.availablePos.contains(checker.availablePos.get(j))) {
-                                     result = false;
-                                 }
-                             }
-                         }
-                     }
-             }
-      
-        	
-        }
-        
-        
-                    
-        return result;
-}
+    			else if(checker.side.equals("white"))
+    		    {
+    				
+    		    	  for (int i = 0; i < 8; ++i) { //Sah Ceken Tasin Onune Gelebilecek Tas Var mi ?
+    	                    for (int k = 0; k < 8; ++k) {
+    	                        if (tableAsSquare[i][k].onThis != null && !tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("black")) {
+    	                            tableAsSquare[i][k].onThis.calculateWhereCanItGo();
+    	                            if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Checkerý Baþka Bir Taþ Yiyebilir mi?
+    	                           	 result =false;
+    	                            else
+    	                         for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) 
+    	                                if (j<checker.availablePos.size() && tableAsSquare[i][k].onThis.availablePos.contains(checker.availablePos.get(j))) {
+    	                                    tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = returnNewVictor(tableAsSquare[i][k].onThis,checker.availablePos.get(j).x,checker.availablePos.get(j).y);
+    	                                    
+    	                                    
+    	                                    if(isThereCheck())
+    	                                   	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
+    	                                    else
+    	                                    {
+    	                                   	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
+    	                                   	 result = false;
+    	                                   	 break;
+    	                                    }
+    	                                   	 
+    	                                    drawPieces();
+    	                                    
+    	                                    
+    	                                }
+    	                            }
+    	                    	}}
+    		    }
+    		  
+            }//
+    			
+    		      return result;  
+    		}
 	
 
 }
