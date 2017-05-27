@@ -68,7 +68,7 @@ public class MainMenu extends JFrame {
 				}
 			 else if(b.getText().equals("start offline"))
 				 {
-				 	Game g1 = new Game();
+				 	Game g1 = new Game(true);
 				 	cb = new Chessboard(g1);
 				 }
 			

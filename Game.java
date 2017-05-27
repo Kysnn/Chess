@@ -7,6 +7,7 @@ public class Game {
 	String mvmsg = "";
 	String whoIsThis;
 	String whoseTurn = "white";
+	boolean isOfflineGame = false;
 	public Game(String serverIP) //client side constructor
 	{
 		client = new ClientPlayer(this,serverIP);
@@ -17,6 +18,10 @@ public class Game {
 		whoIsThis = "white";
 	};//standart constructor for server side.
 	
+	public Game(boolean value)
+	{
+		isOfflineGame = value;
+	}
 	public ServerPlayer getServer() {
 		return server;
 	}
