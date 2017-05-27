@@ -233,29 +233,24 @@ public class Chessboard extends JFrame {
 						clearFromBlues();
 						if(isThereCheck())
 						{
+							Piece temp = lastClickedSquares.get(lastClickedSquares.size()-2).onThis;
 							square.onThis = returnNewVictor(actioner, square.x, square.y);
+							lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
 							if(!isThereCheck())
 							{
 								actioner = null;
-								lastClickedSquares.get(lastClickedSquares.size()-2).onThis = null;
 								lastClickedSquares.clear();
 								clearFromBlues();
 								drawPieces();
 								if(isThereCheck())
 								{
-									if(endOfTheGame())
-									{
-										disableBoard();
-									}
-									else
-									{
-										isThereCheck();
-									}
+									isThereCheck();
 								}
 							}
 							else
 							{
 								square.onThis = null;
+								lastClickedSquares.get(lastClickedSquares.size()-2).onThis = temp;
 							}
 							
 						}
@@ -273,14 +268,7 @@ public class Chessboard extends JFrame {
 								drawPieces();
 								if(isThereCheck())
 								{
-									if(endOfTheGame())
-									{
-										disableBoard();
-									}
-									else
-									{
-										isThereCheck();
-									}
+									isThereCheck();
 								}
 							}
 							if(isThereCheck() && !checker.side.equals(square.onThis.side))
@@ -324,14 +312,7 @@ public class Chessboard extends JFrame {
 						drawPieces();
 						if(isThereCheck())
 						{
-							if(endOfTheGame())
-							{
-								disableBoard();
-							}
-							else
-							{
-								isThereCheck();
-							}
+							isThereCheck();
 						}
 					}
 					else
@@ -355,14 +336,7 @@ public class Chessboard extends JFrame {
 						drawPieces();
 						if(isThereCheck())
 						{
-							if(endOfTheGame())
-							{
-								disableBoard();
-							}
-							else
-							{
-								isThereCheck();
-							}
+							isThereCheck();
 						}
 					}
 					if(isThereCheck() && !checker.side.equals(square.onThis.side))
