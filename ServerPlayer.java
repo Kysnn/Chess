@@ -1,4 +1,4 @@
-package sinanchess12apr;
+package alphamate;
 
 
 import java.io.IOException;

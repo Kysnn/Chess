@@ -1,4 +1,4 @@
-package sinanchess12apr;
+package alphamate;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;

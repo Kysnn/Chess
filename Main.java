@@ -1,4 +1,4 @@
-package sinanchess12apr;
+package alphamate;
 
 public class Main {
 
