@@ -1,4 +1,4 @@
-package sinanchess12apr;
+package alphamate;
 
 
 import java.awt.Color;
@@ -17,7 +17,7 @@ public class Pawn extends Piece {
     @Override
    void calculateWhereCanItGo() {
      availablePos.clear();
-        if (cB.tableAsSquare[x][y].onThis.side.equals("white")) {      //WhitePawn
+        if (cB.tableAsSquare[x][y].onThis != null && cB.tableAsSquare[x][y].onThis.side.equals("white")) {      //WhitePawn
             if (cB.tableAsSquare[x][y].onThis.x == 6) {
                 if (cB.tableAsSquare[x - 1][y].onThis == null) { //FirstMove
                     availablePos.add(cB.tableAsSquare[x - 1][y]);
@@ -54,7 +54,7 @@ public class Pawn extends Piece {
 
             }
         } else {                                                       //BlackPawn
-            if (cB.tableAsSquare[x][y].onThis.x == 1) {
+            if (cB.tableAsSquare[x][y].onThis != null && cB.tableAsSquare[x][y].onThis.x == 1) {
                 if (cB.tableAsSquare[x + 1][y].onThis == null) { //FirtMove
                     availablePos.add(cB.tableAsSquare[x + 1][y]);
                     if (cB.tableAsSquare[x + 2][y].onThis == null) {

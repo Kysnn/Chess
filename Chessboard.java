@@ -1,4 +1,4 @@
-package sinanchess12apr;
+package alphamate;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -282,7 +283,8 @@ public class Chessboard extends JFrame {
 							if(isThereCheck() && !checker.side.equals(square.onThis.side))
 							{
 								square.onThis = null;
-								lastClickedSquares.get(lastClickedSquares.size()-2).onThis = temp;
+								if(lastClickedSquares.size() >= 2)
+									lastClickedSquares.get(lastClickedSquares.size()-2).onThis = temp;
 							}
 							
 
@@ -331,7 +333,8 @@ public class Chessboard extends JFrame {
 					else if(isThereCheck() && !tempVictor.type.equals("king") )
 					{
 						square.onThis = tempVictim;
-						lastClickedSquares.get(lastClickedSquares.size()-2).onThis = tempVictor;
+						if(lastClickedSquares.size() >= 2)
+							lastClickedSquares.get(lastClickedSquares.size()-2).onThis = tempVictor;
 					}
 					
 				}
@@ -349,13 +352,18 @@ public class Chessboard extends JFrame {
 						drawPieces();
 						if(isThereCheck())
 						{
+							if(endOfTheGame())
+							{
+								disableBoard();
+							}
 							isThereCheck();
 						}
 					}
 					if(isThereCheck() && !checker.side.equals(square.onThis.side))
 					{
 						square.onThis = tempVictim;
-						lastClickedSquares.get(lastClickedSquares.size()-2).onThis = tempVictor;
+						if(lastClickedSquares.size() >= 2)
+							lastClickedSquares.get(lastClickedSquares.size()-2).onThis = tempVictor;
 					}
 
 				}
@@ -594,98 +602,114 @@ public class Chessboard extends JFrame {
     		Piece copyVictimKing = new King(victimKing.x,victimKing.y,victimKing.side,this);
     		victimKing.calculateWhereCanItGo();
     		
+    		//If the king can eat the checker then it is not checkmate , but the checker is guarded with another piece then it is checkmate.
     		if(victimKing.availablePos.contains(tableAsSquare[checker.x][checker.y]))
     		{
-    			result = false;
-    		}
-    		
-    		else
-    		{//
+				Piece tempVictor = victimKing;
+				Piece tempVictim = checker;
+				
+				tableAsSquare[tempVictim.x][tempVictim.y].onThis = returnNewVictor(victimKing,tempVictim.x,tempVictim.y);
+				tableAsSquare[tempVictor.x][tempVictor.y].onThis = null;
+							
+				if(isThereCheck())
+				{
+					System.err.println("KORUMALI MAT!!!");
+					return true;
+				}
+				else
+				{
+					tableAsSquare[tempVictim.x][tempVictim.y].onThis = checker;
+					tableAsSquare[tempVictor.x][tempVictor.y].onThis = victimKing;
+					result = false;	
+				}
     			
-               
-    			for(int i = 0 ; i < victimKing.availablePos.size() ; ++i)
+    		}
+    		//If any ally side can block the checker
+    		for(int i = 0 ; i < 8 ; ++i)
+    		{
+    			for(int j = 0 ; j < 8 ; ++j)
     			{
-    				Piece dumbKing = new King(victimKing.availablePos.get(i).x,victimKing.availablePos.get(i).y,copyVictimKing.side,this);
-    				tableAsSquare[victimKing.availablePos.get(i).x][victimKing.availablePos.get(i).y].onThis = dumbKing;
-    				tableAsSquare[victimKing.x][victimKing.y].onThis = null;
-    				
-    				if(isThereCheck())
-    				{   
-    					tableAsSquare[dumbKing.x][dumbKing.y].onThis = null;
-    					tableAsSquare[copyVictimKing.x][copyVictimKing.y].onThis = copyVictimKing;
-    				}
-    				else if(!isThereCheck())
+    				if(tableAsSquare[i][j].onThis != null)
     				{
-    					tableAsSquare[dumbKing.x][dumbKing.y].onThis = null;
-    					tableAsSquare[copyVictimKing.x][copyVictimKing.y].onThis = copyVictimKing;
-    					result = false;
-    					break;
+    					Piece current = tableAsSquare[i][j].onThis;
+    					
+    					if(current.side.equals(victimKing.side) && !current.type.equals("king"))
+    					{
+    						current.calculateWhereCanItGo();
+    						int originAvilablePosSize = current.availablePos.size();
+    						ArrayList<TableSquare> originList = new ArrayList<>(current.availablePos); 
+    						
+    						if(current.type.equals("rook"))
+    						System.err.println("1Current piece size " + current.availablePos.size());
+    						for(int k = 0 ; k < originAvilablePosSize ; ++k)
+    						{
+    							
+    							if(current.type.equals("rook"))
+    								System.out.println(k);
+    							Piece tempCurrent = current;
+    							Piece tempTarget = tableAsSquare[originList.get(k).x][originList.get(k).y].onThis;
+    							if(tempTarget != null)
+    							System.out.println(tempTarget.side + " " + tempTarget.type);
+    							int targetX = originList.get(k).x;
+    							int targetY = originList.get(k).y;
+    							
+    							tableAsSquare[originList.get(k).x][originList.get(k).y].onThis = tempCurrent;
+    							//tableAsSquare[tempCurrent.x][tempCurrent.y].onThis = null;
+    							
+    							if(isThereCheck())
+    							{
+    								if(current.type.equals("rook"))
+    								System.err.println("2Current piece size " + current.availablePos.size());
+    								tableAsSquare[targetX][targetY].onThis = tempTarget;
+    								
+    								
+    								
+    							}
+    							else
+    							{
+    								System.err.println("3Current piece size " + current.availablePos.size());
+    								tableAsSquare[targetX][targetY].onThis = tempTarget;
+    								result = false;
+    								break;
+    							}
+    							
+    						}
+    					}
     				}
     				
-    				  				
     			}
-    			if(checker.side.equals("black"))
-    			{
-        		    for (int i = 0; i < 8; ++i) { //Sah Ceken Tasin Onune Gelebilecek Tas Var mi ?
-                        for (int k = 0; k < 8; ++k) {
-                            if (tableAsSquare[i][k].onThis != null && !tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("white")) 
-                            {
-                                tableAsSquare[i][k].onThis.calculateWhereCanItGo();
-                                if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Checkerý Baþka Bir Taþ Yiyebilir mi?
-                               	 result =false;
-                                else
-                             for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) 
-                                    if (j<checker.availablePos.size() && tableAsSquare[i][k].onThis.availablePos.contains(checker.availablePos.get(j))) 
-                                    {
-                                        tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = returnNewVictor(tableAsSquare[i][k].onThis,checker.availablePos.get(j).x,checker.availablePos.get(j).y);
-                                                                           
-                                        if(isThereCheck())
-                                       	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
-                                        else
-                                        {
-                                       	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
-                                       	 result = false;
-                                       	 break;
-                                        }
-                                                                   
-                                    }
-                                }
-                        	}}
-    			}
-
-    			else if(checker.side.equals("white"))
-    		    {
-    				
-    		    	  for (int i = 0; i < 8; ++i) { //Sah Ceken Tasin Onune Gelebilecek Tas Var mi ?
-    	                    for (int k = 0; k < 8; ++k) {
-    	                        if (tableAsSquare[i][k].onThis != null && !tableAsSquare[i][k].onThis.type.equals("king") && tableAsSquare[i][k].onThis.side.equals("black")) {
-    	                            tableAsSquare[i][k].onThis.calculateWhereCanItGo();
-    	                            if(tableAsSquare[i][k].onThis.availablePos.contains(tableAsSquare[checker.x][checker.y])) //Checkerý Baþka Bir Taþ Yiyebilir mi?
-    	                           	 result =false;
-    	                            else
-    	                         for (int j = 0; j < tableAsSquare[i][k].onThis.availablePos.size(); j++) 
-    	                                if (j<checker.availablePos.size() && tableAsSquare[i][k].onThis.availablePos.contains(checker.availablePos.get(j))) {
-    	                                    tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = returnNewVictor(tableAsSquare[i][k].onThis,checker.availablePos.get(j).x,checker.availablePos.get(j).y);
-    	                                    
-    	                                    
-    	                                    if(isThereCheck())
-    	                                   	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
-    	                                    else
-    	                                    {
-    	                                   	 tableAsSquare[checker.availablePos.get(j).x][checker.availablePos.get(j).y].onThis = null; 
-    	                                   	 result = false;
-    	                                   	 break;
-    	                                    }
-    	                                   	 
-    	                                    drawPieces();
-    	                                    
-    	                                    
-    	                                }
-    	                            }
-    	                    	}}
-    		    }
-    		  
-            }//
+    		}
+    		/*for(int i = 0 ; i < victimKing.availablePos.size() ; ++i)
+    	       {
+    	        Piece dumbKing = new King(victimKing.availablePos.get(i).x,victimKing.availablePos.get(i).y,copyVictimKing.side,this);
+    	        tableAsSquare[victimKing.availablePos.get(i).x][victimKing.availablePos.get(i).y].onThis = dumbKing;
+    	        tableAsSquare[victimKing.x][victimKing.y].onThis = null;
+    	                                System.out.println("dumbking"+dumbKing.x+" "+dumbKing.y+" "+dumbKing.side+" "+dumbKing.type);
+    	                              
+    	        if(isThereCheck())
+    	        {   
+    	         tableAsSquare[dumbKing.x][dumbKing.y].onThis = null;
+    	         tableAsSquare[copyVictimKing.x][copyVictimKing.y].onThis = copyVictimKing;
+    	         
+    	                                        
+    	        }
+    	        else if(!isThereCheck())
+    	        {
+    	         tableAsSquare[dumbKing.x][dumbKing.y].onThis = null;
+    	         tableAsSquare[copyVictimKing.x][copyVictimKing.y].onThis = copyVictimKing;
+    	                                       
+    	         result = false;
+    	         break;
+    	        }
+    	        
+    	              
+    	       }*/
+    		
+    		
+    		
+    		
+    		
+    		
     			
     		      return result;  
     		}
