@@ -679,7 +679,7 @@ public class Chessboard extends JFrame {
     				
     			}
     		}
-    		/*for(int i = 0 ; i < victimKing.availablePos.size() ; ++i)
+    		for(int i = 0 ; i < victimKing.availablePos.size() ; ++i)
     	       {
     	        Piece dumbKing = new King(victimKing.availablePos.get(i).x,victimKing.availablePos.get(i).y,copyVictimKing.side,this);
     	        tableAsSquare[victimKing.availablePos.get(i).x][victimKing.availablePos.get(i).y].onThis = dumbKing;
@@ -703,7 +703,7 @@ public class Chessboard extends JFrame {
     	        }
     	        
     	              
-    	       }*/
+    	       }
     		
     		
     		
