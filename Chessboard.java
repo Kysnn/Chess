@@ -1,4 +1,4 @@
-package alphamate;
+package highconnectionChess;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -69,7 +69,7 @@ public class Chessboard extends JFrame {
 		infoField = new JTextField(20);
 		infoField.setSize(200,30);
 		infoField.setBounds(10,700,200,30);
-		infoField.setText("kakdkasdsa");
+		infoField.setText("Game begins.. White starts..");
 		infoField.setEnabled(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		System.out.println(getInsets().top);
@@ -247,9 +247,13 @@ public class Chessboard extends JFrame {
 								{
 									if(endOfTheGame())
 									{
+										JOptionPane.showMessageDialog(null,"Checkmate! " + checker.side + " wins!");
 										disableBoard();
 									}
-									isThereCheck();
+									else
+									{
+										isThereCheck();
+									}
 								}
 							}
 							else
@@ -275,9 +279,15 @@ public class Chessboard extends JFrame {
 								{
 									if(endOfTheGame())
 									{
+										JOptionPane.showMessageDialog(null,"Checkmate! " + checker.side + " wins!");
 										disableBoard();
+										
 									}
-									isThereCheck();
+									else
+									{
+										isThereCheck();
+									}
+									
 								}
 							}
 							if(isThereCheck() && !checker.side.equals(square.onThis.side))
@@ -321,13 +331,19 @@ public class Chessboard extends JFrame {
 						{
 							if(endOfTheGame())
 							{
+								JOptionPane.showMessageDialog(null,"Checkmate! " + checker.side + " wins!");
 								disableBoard();
 							}
-							isThereCheck();
+							else
+							{
+								isThereCheck();
+							}
+							
 						}
 					}
 					else if(isThereCheck() && tempVictor.type.equals("king") )
 					{
+						JOptionPane.showMessageDialog(null,"Checkmate! " + checker.side + " wins!");
 						disableBoard();
 					}
 					else if(isThereCheck() && !tempVictor.type.equals("king") )
@@ -354,9 +370,13 @@ public class Chessboard extends JFrame {
 						{
 							if(endOfTheGame())
 							{
+								JOptionPane.showMessageDialog(null,"Checkmate! " + checker.side + " wins!");
 								disableBoard();
 							}
-							isThereCheck();
+							else
+							{
+								isThereCheck();
+							}
 						}
 					}
 					if(isThereCheck() && !checker.side.equals(square.onThis.side))

@@ -1,4 +1,6 @@
-package alphamate;
+package highconnectionChess;
+
+
 
 public class Game {
 	private ServerPlayer server;
@@ -8,14 +10,13 @@ public class Game {
 	String whoIsThis;
 	String whoseTurn = "white";
 	boolean isOfflineGame = false;
-	SocketThreadCreator factory;
 	public Game(String serverIP) //client side constructor
 	{
-		factory = new SocketThreadCreator(this, serverIP);
+		client = new ClientPlayer(this,serverIP);
 		whoIsThis = "black";
 	}
 	public Game(){
-		factory = new SocketThreadCreator(this);
+		server = new ServerPlayer(this,10002);
 		whoIsThis = "white";
 	};//standart constructor for server side.
 	
@@ -53,14 +54,15 @@ public class Game {
 		try
 		{
 		cb = new Chessboard(this);
+		disableChessboard();
 		if(client != null)
 			{
-			factory.start();
+			client.start();
 			cb.setTitle("Client");
 			}
 		else
 		{
-			factory.start();
+			server.start();
 			cb.setTitle("Server");
 		}
 		}

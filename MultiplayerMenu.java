@@ -1,4 +1,4 @@
-package alphamate;
+package highconnectionChess;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

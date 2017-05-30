@@ -1,4 +1,6 @@
-package alphamate;
+package highconnectionChess;
+
+
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -17,24 +19,19 @@ public class ClientPlayer extends Thread {
 	private InetAddress ip;
 	private DatagramSocket clientSocket;
     String side = "black";
-	public ClientPlayer(Game game, String ip ) {
+	public ClientPlayer(Game game, String ip) {
 		
 		try {
 			this.game = game;
 			this.ip = InetAddress.getByName(ip);
-			try {
-				clientSocket = new DatagramSocket();
-			} catch (SocketException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		} catch (UnknownHostException e) {
+			clientSocket = new DatagramSocket();
+		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
 		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
 		    public void uncaughtException(Thread t, Throwable e) {
-		      System.err.println(t + " throws balýk exception: " + e);
+		      System.err.println(t + " throws balï¿½k exception: " + e);
 		    }
 		 });
 	}
@@ -48,7 +45,7 @@ public class ClientPlayer extends Thread {
 	
 			
 		
-		while (true) {
+		while(!Thread.interrupted()){
 			
 			sendData(game.mvmsg.getBytes(), 10002);
 			
@@ -81,12 +78,12 @@ public class ClientPlayer extends Thread {
 			
 
 			System.out.println(("SERVER > " + packet.getAddress().toString() + message).trim());
-			
-	
 		}
+                System.out.println("Error");
+                start();
 		
-		
-	}
+	
+        }
 
 	public void sendData(byte[] data, int portNumber) {
 		DatagramPacket packet = new DatagramPacket(data, data.length, ip, portNumber);

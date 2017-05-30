@@ -1,4 +1,4 @@
-package alphamate;
+package highconnectionChess;
 
 import java.awt.Color;
 import java.util.ArrayList;

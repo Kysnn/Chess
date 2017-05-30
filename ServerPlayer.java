@@ -1,11 +1,11 @@
-package alphamate;
+package highconnectionChess;
+
 
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.SocketException;
 
 public class ServerPlayer extends Thread {
@@ -14,18 +14,20 @@ public class ServerPlayer extends Thread {
 	private Game game;
 	private DatagramSocket serverSocket;
 	String side = "white";
-	public ServerPlayer(Game game,DatagramSocket socket)
+	public ServerPlayer(Game game,int socket)
 	{
-		
 		this.game = game;
-		serverSocket = socket;
+		try {
+			serverSocket = new DatagramSocket(socket);
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
 		    public void uncaughtException(Thread t, Throwable e) {
 		      System.err.println(t + " throws exception: " + e);
 		    }
 		 });
-
 	}
 	
 	public void run()
@@ -72,7 +74,7 @@ public class ServerPlayer extends Thread {
 			sendData(game.mvmsg.getBytes(),packet.getPort(),packet.getAddress());
 		
 		}
-		
+                start();
 		
               
 	}

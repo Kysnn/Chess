@@ -1,4 +1,4 @@
-package alphamate;
+package highconnectionChess;
 
 public class Player {
 
