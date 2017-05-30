@@ -17,13 +17,18 @@ public class ClientPlayer extends Thread {
 	private InetAddress ip;
 	private DatagramSocket clientSocket;
     String side = "black";
-	public ClientPlayer(Game game, String ip) {
+	public ClientPlayer(Game game, String ip ) {
 		
 		try {
 			this.game = game;
 			this.ip = InetAddress.getByName(ip);
-			clientSocket = new DatagramSocket();
-		} catch (UnknownHostException | SocketException e) {
+			try {
+				clientSocket = new DatagramSocket();
+			} catch (SocketException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

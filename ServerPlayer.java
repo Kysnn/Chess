@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.SocketException;
 
 public class ServerPlayer extends Thread {
@@ -13,20 +14,18 @@ public class ServerPlayer extends Thread {
 	private Game game;
 	private DatagramSocket serverSocket;
 	String side = "white";
-	public ServerPlayer(Game game,int socket)
+	public ServerPlayer(Game game,DatagramSocket socket)
 	{
+		
 		this.game = game;
-		try {
-			serverSocket = new DatagramSocket(socket);
-		} catch (SocketException e) {
-			e.printStackTrace();
-		}
+		serverSocket = socket;
 		this.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 
 		    public void uncaughtException(Thread t, Throwable e) {
 		      System.err.println(t + " throws exception: " + e);
 		    }
 		 });
+
 	}
 	
 	public void run()
@@ -36,7 +35,7 @@ public class ServerPlayer extends Thread {
 		
 		
 		
-		while(true)
+		while(!Thread.interrupted())
 		{
 			
 			byte[] data = new byte[1024];
@@ -73,6 +72,7 @@ public class ServerPlayer extends Thread {
 			sendData(game.mvmsg.getBytes(),packet.getPort(),packet.getAddress());
 		
 		}
+		
 		
               
 	}

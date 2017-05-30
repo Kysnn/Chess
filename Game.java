@@ -8,13 +8,14 @@ public class Game {
 	String whoIsThis;
 	String whoseTurn = "white";
 	boolean isOfflineGame = false;
+	SocketThreadCreator factory;
 	public Game(String serverIP) //client side constructor
 	{
-		client = new ClientPlayer(this,serverIP);
+		factory = new SocketThreadCreator(this, serverIP);
 		whoIsThis = "black";
 	}
 	public Game(){
-		server = new ServerPlayer(this,10002);
+		factory = new SocketThreadCreator(this);
 		whoIsThis = "white";
 	};//standart constructor for server side.
 	
@@ -54,12 +55,12 @@ public class Game {
 		cb = new Chessboard(this);
 		if(client != null)
 			{
-			client.start();
+			factory.start();
 			cb.setTitle("Client");
 			}
 		else
 		{
-			server.start();
+			factory.start();
 			cb.setTitle("Server");
 		}
 		}
